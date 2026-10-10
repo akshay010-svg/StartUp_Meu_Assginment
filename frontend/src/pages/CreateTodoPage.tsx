@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
+import { useNavigate } from 'react-router-dom'
 import AppShell from '../components/AppShell.tsx'
 import Button from '../components/Button.tsx'
 import {
@@ -7,13 +8,15 @@ import {
   TextAreaField,
   TextField,
 } from '../components/FormField.tsx'
+import { useAuth } from '../context/AuthContext.tsx'
+import { api } from '../services/api.ts'
 import type { TodoDraft, TodoPriority } from '../types/todo.ts'
 
 type CreateTodoPageProps = {
-  onCancel: () => void
-  onCreateTodo: (todo: TodoDraft) => void
-  onSignOut: () => void
-  userName: string
+  onCancel?: () => void
+  onCreateTodo?: (todo: TodoDraft) => void | Promise<void>
+  onSignOut?: () => void
+  userName?: string
 }
 
 const priorities: TodoPriority[] = ['Low', 'Medium', 'High']
@@ -22,36 +25,77 @@ function CreateTodoPage({
   onCancel,
   onCreateTodo,
   onSignOut,
-  userName,
-}: CreateTodoPageProps) {
+  userName: propUserName,
+}: CreateTodoPageProps = {}) {
+  const navigate = useNavigate()
+  const { user, signOut } = useAuth()
+  const userName = propUserName ?? user?.name ?? 'User'
+
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [dueDate, setDueDate] = useState('')
   const [priority, setPriority] = useState<TodoPriority>('Medium')
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleCancel() {
+    if (onCancel) {
+      onCancel()
+    } else {
+      navigate('/dashboard')
+    }
+  }
+
+  function handleSignOut() {
+    if (onSignOut) {
+      onSignOut()
+    } else {
+      signOut()
+      navigate('/signin')
+    }
+  }
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const cleanTitle = title.trim()
     const cleanDescription = description.trim()
 
-    if (!cleanTitle || !dueDate) {
+    if (!cleanTitle || !dueDate || isSubmitting) {
       return
     }
 
-    onCreateTodo({
+    const todoDraft: TodoDraft = {
       description: cleanDescription || 'No description added.',
       dueDate,
       priority,
       title: cleanTitle,
-    })
+    }
+
+    if (onCreateTodo) {
+      await onCreateTodo(todoDraft)
+      return
+    }
+
+    setIsSubmitting(true)
+    try {
+      await api.createTodo(todoDraft)
+      navigate('/dashboard')
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error && err.message
+          ? err.message
+          : 'Failed to create todo. Please check your inputs.'
+      alert(message)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
     <AppShell
       activeView="create"
-      onDashboard={onCancel}
-      onSignOut={onSignOut}
+      onDashboard={handleCancel}
+      onSignOut={handleSignOut}
       userName={userName}
     >
       <main className="page page--narrow">
@@ -112,8 +156,10 @@ function CreateTodoPage({
           </div>
 
           <div className="form-actions">
-            <Button type="submit">Create todo</Button>
-            <Button onClick={onCancel} variant="secondary">
+            <Button disabled={isSubmitting} type="submit">
+              {isSubmitting ? 'Creating...' : 'Create todo'}
+            </Button>
+            <Button onClick={handleCancel} variant="secondary">
               Cancel
             </Button>
           </div>

@@ -11,9 +11,11 @@ Compact project memory for future coding agents. Verify all details against sour
 ## Frontend
 
 - Path: `frontend/`.
-- Stack: React 19, React DOM 19, TypeScript 6, Vite 8, ESLint 10 flat config.
+- Stack: React 19, React DOM 19, React Router DOM 7, TypeScript 6, Vite 8, ESLint 10 flat config.
 - Entry point: `frontend/src/main.tsx`.
-- Main component and live state: `frontend/src/App.tsx`.
+- Client routing and route config: `frontend/src/App.tsx` (`/signin`, `/signup`, `/dashboard`, `/create`, with redirects).
+- Authentication context and state: `frontend/src/context/AuthContext.tsx`.
+- Route guards: `frontend/src/components/ProtectedRoute.tsx`, `frontend/src/components/GuestRoute.tsx`.
 - Global styles and design tokens: `frontend/src/index.css`.
 - App/page/component styles: `frontend/src/App.css`.
 - Reusable UI components: `frontend/src/components/`.
