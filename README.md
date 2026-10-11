@@ -4,35 +4,10 @@ A full-stack, responsive task management web application built with a modern Rea
 
 ---
 
-## Table of Contents
-
-- [Project Overview](#project-overview)
-- [Key Features](#key-features)
-- [Technologies Used](#technologies-used)
-- [Project Architecture](#project-architecture)
-- [Setup and Installation Instructions](#setup-and-installation-instructions)
-  - [Prerequisites](#prerequisites)
-  - [1. Clone the Repository](#1-clone-the-repository)
-  - [2. Backend Setup](#2-backend-setup)
-  - [3. Frontend Setup](#3-frontend-setup)
-- [Instructions to Run the Application](#instructions-to-run-the-application)
-  - [Running the Backend](#running-the-backend)
-  - [Running the Frontend](#running-the-frontend)
-- [Available Scripts](#available-scripts)
-- [API Overview](#api-overview)
-- [Environment Variables](#environment-variables)
-
----
-
-## Project Overview
-
-**TaskFlow** is an enterprise-grade task and todo management system designed for productivity and simplicity. It features secure JWT-based user authentication, per-user task isolation, prioritized Kanban-style and list views, status toggling, and robust server-side schema validations using Zod.
-
----
-
 ## Key Features
 
 ### 🔐 Authentication & Security
+
 - **User Authentication:** Registration (`/signup`) and Login (`/signin`) with hashed passwords via `bcryptjs`.
 - **JWT Authorization:** Stateless authentication using JSON Web Tokens passed via HTTP `Authorization: Bearer <token>` headers.
 - **Route Guards:** Client-side protection with `ProtectedRoute` for private pages and `GuestRoute` preventing authenticated users from re-accessing login/signup forms.
@@ -228,3 +203,13 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 | `JWT_EXPIRES_IN` | Token validity duration | `7d` | Backend |
 | `CORS_ORIGIN` | Allowed CORS origins | `*` | Backend |
 | `VITE_API_BASE_URL` | Base URL for the frontend API client | `http://localhost:5000/api` | Frontend |
+
+## Use of Code0 
+
+I have used Code-zero mostly for the version control works, while trying to figure out how to actual utilise the application i think it's benefits are more visible while working on a team project where we have to track a lot of different changes from team mates, look thorugh commits, and understand the overall project history.
+
+1. The main benefit is that it works over a existing CLI agent helping me to leverage it's features while working on a project and keeping track of different commits.
+
+2. The flow chart view is a nice addition, it helps to get a overview of the project structure and the dependencies between the different components.
+
+3. I would definitley try and recommend codezero when i have to work on a team project, as it would help me to understand the overall project structure and the dependencies between the different components.
